@@ -1,0 +1,24 @@
+---
+title: "Test Rmd to HTML Docker Container"
+author: "[Frank Jung](https://www.linkedin.com/in/frankjung/)"
+date: "`r format(Sys.time(), format='%d %b %Y')`"
+labels: "[test, rmd, Docker]"
+---
+
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(ggplot2)
+```
+
+## Test
+
+This is a simple test of the Rmd to HTML Docker container. 
+It should render this Rmd file to HTML without any issues.
+
+```{r cars, echo=TRUE}
+summary(cars)
+ggplot(cars, aes(x = speed, y = dist)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = "Speed vs Distance", x = "Speed (mph)", y = "Distance (ft)")
+```
