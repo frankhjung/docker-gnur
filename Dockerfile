@@ -7,10 +7,17 @@
 #   docker build -t rmarkdown .
 #   docker run --rm -v "$PWD":/workspace rmarkdown -B <article>
 
-FROM rocker/r-ver:4
+# This is the fall-back default if R_VERSION is not set in build args
+ARG R_VERSION=4.5.2
+FROM rocker/r-ver:${R_VERSION}
+
+ENV R_VERSION=${R_VERSION}
 
 LABEL maintainer="Frank H Jung"
-LABEL description="Rmarkdown build tools for rendering Rmd to HTML"
+LABEL org.opencontainers.image.description="Render Rmarkdown (Rmd)"
+LABEL org.opencontainers.image.source="https://github.com/frankhjung/docker-gnur"
+LABEL org.opencontainers.image.authors="Frank H Jung"
+LABEL org.opencontainers.image.version="${R_VERSION}"
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -19,6 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       libxml2-dev \
       make \
       pandoc \
+      librsvg2-bin \
     && rm -rf /var/lib/apt/lists/*
 
 # Install R packages

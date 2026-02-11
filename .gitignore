@@ -3,5 +3,7 @@
 *.code-workspace
 .idea/
 *.iml
+public/
 refresh_token.py
+.Rproj.user
 .vscode/
