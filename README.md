@@ -6,10 +6,8 @@ includes [GNU make](https://www.gnu.org/software/make/).
 
 The latest Docker image can be found on:
 
-* [Docker Hub](https://hub.docker.com/r/frankhjung/gnur):
-  `frankhjung/gnur:latest` -
-  [GitHub Container Registry](https://github.com/frankhjung/docker-gnur/pkgs/container/gnur):
-  `ghcr.io/frankhjung/gnur:latest`
+* Docker Hub: [frankhjung/gnur:latest](https://hub.docker.com/r/frankhjung/gnur)
+* GHCR: [ghcr.io/frankhjung/gnur:latest](https://github.com/frankhjung/docker-gnur/pkgs/container/gnur)
 
 ## R Versions
 
@@ -88,13 +86,13 @@ echo [token] | docker login ghcr.io -u frankhjung --password-stdin
 Build the image locally:
 
 ```bash
-docker build --compress --rm --tag frankhjung/gnur:latest .
+docker build --rm --tag frankhjung/gnur:latest .
 ```
 
 Build with a specific R version:
 
 ```bash
-docker build --build-arg R_VERSION=4.5.2 --compress --rm --tag frankhjung/gnur:4.5.2 .
+docker build --build-arg R_VERSION=4.5.2 --rm --tag frankhjung/gnur:4.5.2 .
 ```
 
 ## Run
@@ -109,6 +107,15 @@ Note: the image uses `Rscript` as its entrypoint, so you must pass the script
 and its arguments when running the container.
 
 ## Makefile
+
+### build-image
+
+Build the Docker image locally and tag it as `frankhjung/gnur:latest`.
+
+### run-container
+
+Build the image and run it interactively with the current directory mounted to
+`/workspace`.
 
 ### test-container
 
@@ -192,17 +199,17 @@ jobs:
         with:
           fetch-depth: 1
       - name: build html from rmd
-        uses: docker://ghcr.io/frankhjung/gnur:4.5.2
+        uses: docker://ghcr.io/frankhjung/gnur:latest
         with:
           args: >-
-            test/make.R
-            test/article.Rmd
-            ../article.html
+            make.R
+            test.Rmd
+            public/test.html
       - name: archive article
         uses: actions/upload-artifact@v4
         with:
           name: article
-          path: article.html
+          path: public/test.html
 ```
 
 ### Using with Make
