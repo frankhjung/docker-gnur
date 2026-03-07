@@ -1,26 +1,19 @@
 ---
-name: Build and Push Docker Image to GitHub Container Registry
-
-env:
-  R_VERSION: ${{ vars.R_VERSION }}
+name: Build and Push Docker Image (DockerHub and GHCR)
 
 # yamllint disable-line rule:truthy
 on:
   push:
     branches: ["main"]
     tags-ignore: ["*"]
-    paths:
-      - "Dockerfile"
   check_run:
     types: [rerequested, requested_action]
   pull_request:
     branches: ["main"]
-    paths:
-      - "Dockerfile"
 # yamllint enable
 
 jobs:
-  ghcr:
+  docker:
     runs-on: ubuntu-latest
 
     permissions:
@@ -31,8 +24,22 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v4
 
+      - name: Read version from project
+        id: version
+        run: |
+          echo "R_VERSION=$(awk -F= '/^ARG R_VERSION=/{print $2; exit}' Dockerfile)" >> "$GITHUB_OUTPUT"
+
+      - name: set up qemu
+        uses: docker/setup-qemu-action@v3
+
       - name: set up docker buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: login to docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: log in to github container registry
         uses: docker/login-action@v3
@@ -46,10 +53,12 @@ jobs:
         with:
           context: .
           push: true
-          build-args: |
-            R_VERSION=${{ env.R_VERSION }}
           tags: |
-            ghcr.io/frankhjung/gnur:${{ env.R_VERSION }}
-            ghcr.io/frankhjung/gnur:latest
+            frankhjung/python:latest
+            frankhjung/python:${{ github.sha }}
+            frankhjung/python:${{ steps.version.outputs.R_VERSION }}
+            ghcr.io/${{ github.repository_owner }}/gnur:latest
+            ghcr.io/${{ github.repository_owner }}/gnur:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/gnur:${{ steps.version.outputs.R_VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
