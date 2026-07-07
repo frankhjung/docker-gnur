@@ -1,8 +1,8 @@
 ---
 title: "Test Rmd to HTML Docker Container"
-author: "[Frank Jung](https://www.linkedin.com/in/frankjung/)"
+author: '[Frank Jung](https://www.linkedin.com/in/frankjung/)'
 date: "`r format(Sys.time(), format='%d %b %Y')`"
-labels: "[test, rmd, Docker]"
+labels: '[test, rmd, Docker]'
 ---
 
 ```{r setup, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
@@ -10,9 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 require(ggplot2)
 ```
 
-## Test
+## Test Plot
 
-This is a simple test of the Rmd to HTML Docker container. 
+This is a simple test of the Rmd to HTML Docker container.
 It should render this Rmd file to HTML without any issues.
 
 ```{r cars, echo=TRUE}
@@ -22,3 +22,31 @@ ggplot(cars, aes(x = speed, y = dist)) +
   geom_smooth(method = "lm") +
   labs(title = "Speed vs Distance", x = "Speed (mph)", y = "Distance (ft)")
 ```
+
+## Test Mathematics - Prove that $\log_2 3$ is irrational
+
+I start by assuming $\log_2 3$ is rational.
+
+That means there exist positive integers $a > 0$ and $b > 0$ such that:
+
+$$\log_2 3 = \frac{a}{b}$$
+
+$$2^{\frac {a}{b}} = 3$$
+
+$$2^a = 3^b$$
+
+Let $a = k + 1$, and replace:
+
+$$2^{k+1} = 3^b$$
+
+Factor out 2:
+
+$$2 \times 2^k = 3^b$$
+
+Because $a$ is a positive integer, $2^a$ is 2 multiplied by itself $a$ times, so the left side is even.
+
+Because $b$ is a positive integer, $3^b$ is 3 multiplied by itself $b$ times, so the right side is odd.
+
+An even number cannot equal an odd number, so I have reached a contradiction.
+
+Therefore, $\log_2 3$ is irrational. $\square$
