@@ -9,8 +9,9 @@ R_VERSION := $(shell awk -F= '/^ARG R_VERSION=/{print $$2; exit}' Dockerfile)
 DOCKER ?= docker
 
 help: ## Show this help message
-	@echo Available targets:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-15s %s\n", $$1, $$2}'
+	@echo ""
+	@echo "Default goal: ${.DEFAULT_GOAL}"
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
 build-image: ## Build the Docker image
 	@$(DOCKER) build --build-arg R_VERSION=$(R_VERSION) -t $(PROJECT_NAME):$(R_VERSION) .
@@ -18,7 +19,8 @@ build-image: ## Build the Docker image
 
 test-container: build-image ## Test the Docker image (sanity check)
 	@mkdir -p public
-	@$(DOCKER) run --rm -v $(PWD):/workspace $(PROJECT_NAME):latest make.R test.Rmd public/test.html
+	#@$(DOCKER) run --rm -v $(PWD):/workspace $(PROJECT_NAME):latest make.R test.Rmd public/test.html
+	$(DOCKER) run --rm -v $(PWD):/workspace $(PROJECT_NAME):latest make -B test
 
 images: ## List local images for this project
 	@$(DOCKER) image ls $(PROJECT_NAME)
